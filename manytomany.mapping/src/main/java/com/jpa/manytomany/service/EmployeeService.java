@@ -2,10 +2,8 @@ package com.jpa.manytomany.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.jpa.manytomany.entity.Employee;
 import com.jpa.manytomany.entity.Project;
 import com.jpa.manytomany.repository.EmployeeRepo;
@@ -45,11 +42,13 @@ public class EmployeeService {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.body(new ResponseError("Please Eneter all the fields"));
 			}
-//			Employee findEmp = employeeRepo.findByEmpId(employee.getEmpId());
-//			if (findEmp!=null) {
-//			int indexEmp = employees.indexOf(employee);
-//			employee.setEmpId(indexEmp);
-//			}
+			Employee findEmp = employeeRepo.findByEmpId(employee.getEmpId());
+			if (findEmp!=null) {
+			int indexEmp = employees.indexOf(employee);
+			employee.setEmpId(indexEmp);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new ResponseError("Employee Id is Already exist in the database!!!"));
+			}
 			if (employee.getEmpId() <= 1000) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.body(new ResponseError("Employee Id must be started with 1001"));
