@@ -45,10 +45,12 @@ public class EmployeeService {
 			Employee findEmp = employeeRepo.findByEmpId(employee.getEmpId());
 			if (findEmp!=null) {
 			int indexEmp = employees.indexOf(employee);
-			employee.setEmpId(indexEmp);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new ResponseError("Employee Id is Already exist in the database!!!"));
-			}
+			employees.set(indexEmp, findEmp);
+			
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//					.body(new ResponseError("Employee Id already exist"));
+			} 
+			
 			if (employee.getEmpId() <= 1000) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.body(new ResponseError("Employee Id must be started with 1001"));
@@ -137,12 +139,14 @@ public class EmployeeService {
 						return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 								.body(new ResponseError("project duration in month not less than 1"));
 					}
-
+					
 					project.setProjectName(project.getProjectName().trim().replaceAll("\\s{1,}", " "));
 					project.setProjectJoingDate(LocalDateTime.now());
 					project.setModicationDate(LocalDateTime.now());
 				}
+								
 			}
+			
 		}
 		employeeRepo.saveAll(employees);
 		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseSuccess("Data Inserted Successfully"));
